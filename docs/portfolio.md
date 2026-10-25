@@ -28,16 +28,3 @@ An initial address-conflict hypothesis was revised when fresh DHCP/ARP evidence 
 The Windows prototype obtained an accepted lease. A later full-day device-log sample contained **4,320 gateway-loss reports at 0%**, followed by 51 early the next day. These are sampled gateway observations, not a continuous or end-to-end benchmark.
 
 The generalized public implementation requires platform-specific field validation. See the [validation record](validation.md) and current CI results.
-
-## Résumé wording
-
-**E3200 DHCP Helper — Python, PowerShell, Bash, DHCP, GitHub Actions**
-
-- Diagnosed vendor-option rejection in DHCP negotiation and reproduced successful E3200 lease acquisition using a MAC-scoped compatibility profile.
-- Developed configurable Windows, macOS and experimental Linux workflows with input validation, synthetic regression tests, reversible operation and setup documentation.
-
-Use wording that reflects what you personally verified. Do not describe untested Linux runtime or prototype observations as universal compatibility.
-
-## Development notes
-
-Implementation and documentation were developed with AI assistance. Protocol claims were checked against primary documentation, upstream behavior and the observed DHCP exchange.
