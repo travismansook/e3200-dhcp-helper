@@ -17,6 +17,7 @@ import urllib.request
 import zipfile
 
 ROOT = Path(__file__).resolve().parent.parent
+sys.path.insert(0, str(ROOT))
 VERSION = (ROOT / "VERSION").read_text().strip()
 DNSMASQ_URL = "https://thekelleys.org.uk/dnsmasq/dnsmasq-2.93.tar.gz"
 DNSMASQ_SHA = "cc967771abdafeb43d10db18932d6b59fd4bed2c69c22acf8cb96aff6920d55f"
