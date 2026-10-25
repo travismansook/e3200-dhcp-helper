@@ -58,7 +58,7 @@ def main():
             "body": notes, "draft": True, "prerelease": True,
         })
     request(API + "/releases/" + str(release["id"]), "PATCH",
-            {"body": notes, "target_commitish": SHA})
+            {"tag_name": TAG, "body": notes, "target_commitish": SHA})
     existing = {a["name"]: a for a in request(API + "/releases/" + str(release["id"]) + "/assets")}
     for name in (*FILES, "SHA256SUMS.txt"):
         contents = (assets / name).read_bytes()
@@ -71,7 +71,10 @@ def main():
         digest = uploaded.get("digest")
         if digest and digest != "sha256:" + hashlib.sha256(contents).hexdigest():
             raise RuntimeError("Uploaded asset digest differs: " + name)
-    request(API + "/releases/" + str(release["id"]), "PATCH", {"draft": False, "prerelease": True})
+    published = request(API + "/releases/" + str(release["id"]), "PATCH",
+                        {"tag_name": TAG, "target_commitish": SHA, "draft": False, "prerelease": True})
+    if published["tag_name"] != TAG or published["draft"]:
+        raise RuntimeError("Release publication needs review: GitHub did not retain the requested tag.")
     print("Published preview release: https://github.com/" + REPO + "/releases/tag/" + TAG)
 
 
