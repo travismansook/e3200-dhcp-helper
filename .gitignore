@@ -1,0 +1,21 @@
+# Your configuration and diagnostic data belong on your own machine.
+config.local.json
+config.*.local.json
+*.leases
+*.pid
+*.log
+*.pcap
+*.pcapng
+.runtime/
+__pycache__/
+*.py[cod]
+.venv/
+.env
+.DS_Store
+Thumbs.db
+windows/vendor/
+*.exe
+*.zip
+*.ini
+.pytest_cache/
+site-packages/

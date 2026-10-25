@@ -1,0 +1,43 @@
+name: Connection or helper problem
+description: Report a reproducible problem with a helper or its setup.
+title: "[Bug]: "
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Please redact MAC addresses, serial numbers, public IPv6 addresses and usernames.
+        Keep raw logs and your local configuration private. A short redacted excerpt is enough.
+  - type: input
+    id: platform
+    attributes:
+      label: Operating system and helper version
+      placeholder: Ubuntu 24.04, commit or release tag
+    validations:
+      required: true
+  - type: textarea
+    id: equipment
+    attributes:
+      label: Equipment and connection
+      description: Router and extender models, firmware versions, coax or Ethernet backhaul.
+    validations:
+      required: true
+  - type: textarea
+    id: reproduce
+    attributes:
+      label: What happened and how to reproduce it
+      description: Include the time, timezone, expected result and actual result.
+    validations:
+      required: true
+  - type: textarea
+    id: evidence
+    attributes:
+      label: Redacted evidence
+      description: Include DHCP rejection messages, lease renewal results or helper startup errors.
+  - type: checkboxes
+    id: checks
+    attributes:
+      label: Setup checks
+      options:
+        - label: Only one helper is running.
+        - label: The helper and extender addresses are outside the main router's DHCP pool and have been checked for conflicts.
+        - label: I have removed personal identifiers and credentials from this report.

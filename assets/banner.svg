@@ -1,0 +1,32 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="280" viewBox="0 0 1200 280" role="img" aria-labelledby="title description">
+  <title id="title">E3200 DHCP Helper</title>
+  <desc id="description">DHCP compatibility tooling for Windows, macOS and Linux.</desc>
+  <defs>
+    <linearGradient id="background" x2="1" y2="1"><stop stop-color="#0b1220"/><stop offset="1" stop-color="#142b48"/></linearGradient>
+    <linearGradient id="accent"><stop stop-color="#5eead4"/><stop offset="1" stop-color="#60a5fa"/></linearGradient>
+  </defs>
+  <rect width="1200" height="280" rx="20" fill="url(#background)"/>
+  <path d="M0 270h1200" stroke="url(#accent)" stroke-width="5"/>
+  <g font-family="Segoe UI, Helvetica, Arial, sans-serif">
+    <text x="54" y="50" fill="#8fb3d9" font-size="14" font-weight="600" letter-spacing="2">NETWORKING / DHCP INTEROPERABILITY</text>
+    <text x="50" y="117" fill="#f8fafc" font-size="53" font-weight="700" letter-spacing="-1.5">E3200 DHCP Helper</text>
+    <text x="54" y="157" fill="#c4d6e8" font-size="22">One extender. Three platforms.</text>
+    <g font-size="15" font-weight="600">
+      <rect x="54" y="191" width="104" height="34" rx="17" fill="#213d58"/><text x="73" y="213" fill="#dbeafe">Windows</text>
+      <rect x="171" y="191" width="94" height="34" rx="17" fill="#213d58"/><text x="193" y="213" fill="#dbeafe">macOS</text>
+      <rect x="278" y="191" width="86" height="34" rx="17" fill="#213d58"/><text x="301" y="213" fill="#dbeafe">Linux</text>
+    </g>
+    <g transform="translate(810 45)">
+      <rect width="330" height="190" rx="16" fill="#0d1c30" stroke="#34536f"/>
+      <circle cx="26" cy="27" r="5" fill="#5eead4"/>
+      <text x="43" y="32" fill="#b9d2e7" font-size="13" letter-spacing="1">DHCP COMPATIBILITY PROFILE</text>
+      <path d="M25 49h280" stroke="#29455e"/>
+      <text x="26" y="84" fill="#77baff" font-size="16" font-weight="600">OPTION 60</text>
+      <text x="169" y="84" fill="#e2e8f0" font-size="16">Vendor class</text>
+      <text x="26" y="119" fill="#5eead4" font-size="16" font-weight="600">OPTION 125</text>
+      <text x="169" y="119" fill="#e2e8f0" font-size="16">Vendor identity</text>
+      <path d="M25 139h280" stroke="#29455e"/>
+      <text x="26" y="168" fill="#b9d2e7" font-size="14">Single-client scope / Existing gateway</text>
+    </g>
+  </g>
+</svg>

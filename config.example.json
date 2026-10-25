@@ -1,0 +1,11 @@
+{
+  "extender_mac": "AA:BB:CC:DD:EE:FF",
+  "extender_ip": "192.168.1.250",
+  "server_ip": "192.168.1.240",
+  "gateway": "192.168.1.1",
+  "dns": "192.168.1.1",
+  "subnet_mask": "255.255.255.0",
+  "interface": "REPLACE_WITH_INTERFACE",
+  "lease_minutes": 60,
+  "address_plan_confirmed": false
+}
