@@ -1,103 +1,139 @@
 <p align="center"><img src="assets/banner.svg" alt="E3200 DHCP Helper — Windows, macOS and Linux" width="100%"></p>
 
 <p align="center">
-<a href="https://github.com/travismansook/e3200-dhcp-helper/actions/workflows/ci.yml"><img src="https://github.com/travismansook/e3200-dhcp-helper/actions/workflows/ci.yml/badge.svg?branch=main" alt="Offline checks"></a>
+<a href="https://github.com/travismansook/e3200-dhcp-helper/actions/workflows/ci.yml"><img src="https://github.com/travismansook/e3200-dhcp-helper/actions/workflows/ci.yml/badge.svg?branch=main" alt="Automated checks"></a>
 <a href="LICENSE"><img src="https://img.shields.io/badge/license-MIT-blue" alt="MIT license"></a>
-<img src="https://img.shields.io/badge/Python-3.10%2B-3776AB" alt="Python 3.10 or newer for Unix">
 </p>
 
 # E3200 DHCP Helper
 
-**Supply the DHCP vendor options an E3200 expects, while keeping your existing router in charge.**
+**A workaround for an E3200 that turns yellow and won't accept a network address after a router change. It can also restore access to the extender's settings page.**
 
-A configuration-driven helper for Windows, macOS and Linux. It offers an IPv4 lease to **one configured extender MAC address**, including DHCP options **60** and **125**. Your router continues providing Internet access and normal DHCP for other devices.
+This project came from keeping an existing **Verizon E3200 extender** after switching from a **CR1000A to a CHR30A**. The extender developed a yellow-light problem, and its settings page could not reliably be reached using the IPv4 address shown on the network.
 
-[Windows setup](docs/windows.md) · [macOS setup](docs/macos.md) · [Linux setup](docs/linux.md) · [How it works](docs/how-it-works.md) · [Engineering case study](docs/portfolio.md)
+The cause in that setup was the way the E3200 accepted its network address. This helper supplies the missing information so it can accept an address and communicate with the router.
 
-## Why this exists
+**New here?** Read the explanation below, then choose the [Windows](docs/windows.md), [macOS](docs/macos.md), or [Linux](docs/linux.md) setup guide.
 
-An E3200 client repeatedly rejected visible DHCP offers. Its logs revealed a missing vendor-class identifier; a first helper supplied it and exposed a second missing requirement, vendor-identifying information. Supplying both fields produced an accepted lease in the original Windows trial.
+Looking for the original, more technical README? It is preserved in [README-TECHNICAL.md](README-TECHNICAL.md).
 
-This project turns that investigation into inspectable configuration, scoped launchers and reproducible offline checks. It wraps existing DHCP engines rather than implementing a new network server.
+## What was causing the problem?
 
-## At a glance
+Devices normally ask the router for a local IP address. That address lets other devices on your home network find them. The process is called **DHCP**.
 
-| Platform | DHCP engine | Operation | Status |
-|---|---|---|---|
-| Windows | Separately downloaded Tftpd64 v4.74 | Native PowerShell launcher | Original prototype field result; generalized launcher needs validation |
-| macOS | dnsmasq | Python foreground runner | Configuration syntax checked; public runner needs field validation |
-| Linux | dnsmasq | Python runner and optional Ubuntu systemd service | Experimental runtime support |
+In the original setup, the router offered the E3200 an address, but the extender rejected the offer because it was missing extra manufacturer information the E3200 expected. The logs showed two missing pieces, called **options 60 and 125**.
 
-The helper handles **DHCPv4 compatibility only**. It does not route traffic or implement a vendor management controller. Previous-generation extenders with the CHR30A remain outside Verizon's supported combinations. [Compatibility reference](https://www.verizon.com/support/residential/internet/equipment/routers/wi-fi-access-point)
+That explains why an address displayed on a status page did not necessarily work: it was not proof that the extender had accepted a current, usable address.
 
-## Architecture
+Once the helper supplied both pieces of information, the E3200 accepted its address. **Access to its settings page worked again**, and the yellow-light condition cleared during the original trial.
 
-```mermaid
-flowchart LR
-    R["Existing router<br/>Internet + normal DHCP"] --- E["E3200<br/>Coax or Ethernet"]
-    H["Helper computer"] --- R
-    H -. "DHCP for one MAC<br/>Options 60 + 125" .-> E
-    E --- C["Client devices"]
+## What does the helper do?
+
+It runs on a computer on your home network and answers the E3200 when it asks for an address:
+
+1. It recognizes your E3200 by its device ID, called a **MAC address**.
+2. It offers the extender the unused IP address you chose, with the extra information it expects.
+3. It tells the extender to keep using your existing router for Internet access.
+
+Your CHR30A stays the main router. It continues assigning addresses to your other devices, and your normal Internet traffic continues through it.
+
+The helper is configured for **one extender**. It does not replace your router, require the old CR1000A, or make your computer carry everyone's Internet traffic.
+
+For the protocol details, see [How it works](docs/how-it-works.md).
+
+## Is this for every E3200 yellow light?
+
+**It targets this particular address-assignment problem.** A yellow light alone does not identify the cause.
+
+Verizon describes a solid yellow light as a connection problem; blinking yellow can indicate placement or signal issues. Check your power and coax/Ethernet connection too. See the [official E3200 light guide](https://www.verizon.com/support/knowledge-base-305628/).
+
+This is an independent workaround. Verizon does not list the E3200 as a supported extender for the CHR30A, and this helper does not establish full vendor-supported compatibility. See [Verizon's compatibility information](https://www.verizon.com/support/residential/internet/equipment/routers/wi-fi-access-point).
+
+## What do I need?
+
+- An E3200 with a working connection back to your home network, such as coax or Ethernet.
+- A computer that can stay powered on, awake, and connected by Ethernet.
+- Your extender's MAC address and a carefully chosen IP address for it.
+- The setup files for your computer:
+
+| Your computer | Start here | What to know |
+|---|---|---|
+| Windows | [Windows guide](docs/windows.md) | Uses a separately downloaded Tftpd64 program. No Python needed. |
+| Mac | [macOS guide](docs/macos.md) | Uses Python and dnsmasq; the guide explains the dependencies. |
+| Linux / Ubuntu | [Linux guide](docs/linux.md) | Includes an optional background service. Runtime support is experimental. |
+
+Download the project using **Code → Download ZIP** on the repository page, extract it, and follow the guide for your computer. The guides explain which extra programs to download and how to start the helper.
+
+The original Windows prototype obtained an accepted lease. Automated checks pass across platforms, but the public launchers still need testing in more real setups. The [validation record](docs/validation.md) separates what was observed from what was checked automatically.
+
+## Before starting: keep the addresses from conflicting
+
+The helper needs a stable address, and the extender needs an address another device will not receive.
+
+The example configuration uses:
+
+| Device | Example address |
+|---|---|
+| Main router | `192.168.1.1` |
+| Helper computer | `192.168.1.240` |
+| E3200 | `192.168.1.250` |
+
+**These are examples, not settings to copy blindly.** Check your router's current device list, existing reservations, and any manually assigned addresses. Set the selected addresses aside from its automatic address pool as described in the setup guide.
+
+Keep the main router's normal DHCP service enabled, and run only one helper. The platform guide walks through the remaining configuration and starting it.
+
+## How do I open the E3200's network settings?
+
+Once the E3200 has accepted the helper's address, open **the extender's assigned address** in a browser on your home network.
+
+For example, if you configured the E3200 to use `192.168.1.250`, try:
+
+```text
+https://192.168.1.250
 ```
 
-The helper is available when the extender requests or renews a lease. Internet traffic continues through the router, not the helper computer.
+Use your actual extender address if you chose a different one. It is the `extender_ip` value in the helper configuration—not the helper computer's address.
 
-## Prepare your address plan
+Sign in with the extender's administrator credentials. The E3200's label contains its default administrator details.
 
-1. Use a LAN you own or administer.
-2. Choose available helper and extender addresses, and exclude them from the router's dynamic pool. Check existing leases, reservations and manual assignments.
-3. Give the helper a stable wired IPv4 address.
-4. Read the extender's actual MAC address from its label or management page.
-5. Stop previous helpers; run only one.
-6. Start with a **60-minute lease** so renewal can be verified.
+**Restoring a usable address is what makes this page reachable again in the demonstrated setup.** If it does not open, confirm the extender actually accepted its lease and check its current address in the helper or router. A number left on an old status page may be out of date. See [Troubleshooting](docs/troubleshooting.md).
 
-The example uses `192.168.1.250` for the extender, `192.168.1.240` for the helper and `192.168.1.1` for gateway/DNS. **These are examples, not verified assignments.** Replace the sample MAC and interface too.
+## What is a lease, and how long should it last?
 
-## Quick start
+A **lease** is how long the extender is allowed to keep an address before it expires. It normally tries to renew that lease before the time runs out.
 
-### Windows
+The helper's `lease_minutes` setting controls the duration it offers:
 
-Install no Python dependency. Follow the [Windows guide](docs/windows.md) to obtain the pinned portable Tftpd64 executable, copy `config.example.json` to `config.local.json` and enter your verified settings.
+| Setting | Duration | When to use it |
+|---|---|---|
+| `60` | 1 hour | Start here so you can check that renewal works. |
+| `1440` | 24 hours | An option after successful testing, with the helper kept available. |
+| `525600` | 365 days | An advanced choice that reduces scheduled renewals. It is not a permanent fix for an unavailable helper. |
 
-```powershell
-.\windows\Start-Helper.cmd -Config .\config.local.json -ValidateOnly
-# Then, in an Administrator terminal:
-.\windows\Start-Helper.cmd -Config .\config.local.json
-```
+Clients normally begin trying to renew around **halfway through the lease**, although the timers and device behavior can differ. A one-year lease therefore does not normally mean a full year without a renewal attempt. [DHCP lease behavior](https://www.rfc-editor.org/rfc/rfc2131.html)
 
-### macOS and Linux
+Start with an hour, confirm the extender accepts the address and renews it, then choose a longer duration if appropriate. Changing the setting affects a new or renewed lease; it does not extend one that was already issued.
 
-Install Python 3.10+ and dnsmasq through your platform's package manager, then:
+## Does the helper need to stay open?
 
-```sh
-python3 e3200_helper.py init --output config.local.json
-# Edit config.local.json with your verified plan and real interface.
-python3 e3200_helper.py check --config config.local.json
-python3 e3200_helper.py render --config config.local.json --format dnsmasq
-sudo python3 e3200_helper.py run --config config.local.json
-```
+**Plan to keep it running and the computer awake.**
 
-Set `address_plan_confirmed` to the JSON boolean `true` only after reviewing the addresses. Offline validation can inspect an unconfirmed plan; serving requires confirmation. Follow the platform guide before running with administrator/root privileges.
+If you close the helper or shut the computer down, the extender may keep working with the lease it already has. It will need the helper again when it requests or renews an address. A restart, lost lease, or other early request can bring that need forward.
 
-## Verify the result
+The yellow light or inaccessible settings page **can return** if the extender cannot obtain the information it needs. A long lease does not remove that possibility.
 
-Look for DHCPREQUEST, DHCPACK and a client-side bound lease. Verify the current MAC/address mapping, renewal and reacquisition after an extender restart. Confirm that unrelated devices still receive their settings from the original router.
+For a longer-term setup, use a computer or small dedicated device that can remain available. The Linux guide includes an optional background service so a terminal window does not have to stay open.
 
-A later full-day device-log sample contained **4,320 gateway-loss reports at 0%**. Those were sampled gateway checks, not a continuous or end-to-end benchmark. Prototype evidence does not establish every path in the generalized launchers. See the [validation record](docs/validation.md).
+## Getting help and technical details
 
-## Inspect and contribute
+If this looks like your issue, follow the guide for your platform and verify that the extender accepts its address, renews it, and can get an address again after a controlled restart.
 
-```sh
-python3 -m unittest discover -s tests -v
-python3 tools/analyze_bhm.py YOUR_LOCAL_LOG --date YYYY-MM-DD
-```
-
-Tests use synthetic inputs and do not start a DHCP server. The optional analyzer reports log coverage, explicit state transitions, sampled loss and clock reversals.
-
+- [Windows setup](docs/windows.md) · [macOS setup](docs/macos.md) · [Linux setup](docs/linux.md)
 - [Troubleshooting](docs/troubleshooting.md)
-- [Contributing](CONTRIBUTING.md)
-- [Security and operational scope](SECURITY.md)
-- [Third-party notices](THIRD-PARTY-NOTICES.md)
-- [Portfolio case study and résumé wording](docs/portfolio.md)
+- [Original technical README](README-TECHNICAL.md)
+- [How the workaround works](docs/how-it-works.md)
+- [Project case study and résumé wording](docs/portfolio.md)
 
-Original project code is [MIT licensed](LICENSE). No external DHCP binaries or private network logs are bundled. This independent project is not affiliated with Verizon.
+When asking for help, share your router/extender models, helper platform, and a short description of what happened. Remove real MAC addresses, passwords, serial numbers, and other private network details from anything you post publicly.
+
+Original project code is [MIT licensed](LICENSE). External programs are downloaded separately. This project is not affiliated with Verizon.
