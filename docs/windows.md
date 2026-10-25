@@ -1,5 +1,7 @@
 # Windows setup
 
+**For the simpler download-and-open version, use the [Windows download guide](downloads.md#windows).** The steps below describe running the source scripts yourself.
+
 The native launcher uses Windows PowerShell 5.1 and Tftpd64. Python is not required.
 
 ## 1. Obtain the dependency

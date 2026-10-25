@@ -17,6 +17,14 @@ The cause in that setup was the way the E3200 accepted its network address. This
 
 Looking for the original, more technical README? It is preserved in [README-TECHNICAL.md](README-TECHNICAL.md).
 
+## Download and open
+
+**[Download a ready-to-open program from Releases](https://github.com/travismansook/e3200-dhcp-helper/releases).** You do not need to build the project, install Python, or edit a configuration file.
+
+Choose the Windows ZIP, the ZIP for your type of Mac, or the Ubuntu installer. Extract the complete ZIP and open **Open E3200 Helper**; on Ubuntu, install the package and open **E3200 DHCP Helper** from Applications.
+
+The setup asks a few questions and reads this computer's Ethernet settings for you. You still need to supply your extender's MAC address and check that its chosen IP address is set aside on the router. **[Step-by-step download instructions](docs/downloads.md)**
+
 ## What was causing the problem?
 
 Devices normally ask the router for a local IP address. That address lets other devices on your home network find them. The process is called **DHCP**.
@@ -58,11 +66,11 @@ This is an independent workaround. Verizon does not list the E3200 as a supporte
 
 | Your computer | Start here | What to know |
 |---|---|---|
-| Windows | [Windows guide](docs/windows.md) | Uses a separately downloaded Tftpd64 program. No Python needed. |
-| Mac | [macOS guide](docs/macos.md) | Uses Python and dnsmasq; the guide explains the dependencies. |
-| Linux / Ubuntu | [Linux guide](docs/linux.md) | Includes an optional background service. Runtime support is experimental. |
+| Windows | [Download guide](docs/downloads.md#windows) | Open the launcher; it offers to download its required Tftpd64 program from the official source. |
+| Mac | [Download guide](docs/downloads.md#macos) | Choose Apple Silicon or Intel. The ZIP includes the runtime and DHCP engine. |
+| Linux / Ubuntu | [Download guide](docs/downloads.md#ubuntu) | Install the Ubuntu package, then open it from Applications. Runtime support is experimental. |
 
-Download the project using **Code → Download ZIP** on the repository page, extract it, and follow the guide for your computer. The guides explain which extra programs to download and how to start the helper.
+Use the named **program downloads** under Releases. GitHub's automatically added **Source code** downloads and the **Code → Download ZIP** button contain the scripts for people who want to work with the source instead.
 
 The original Windows prototype obtained an accepted lease. Automated checks pass across platforms, but the public launchers still need testing in more real setups. The [validation record](docs/validation.md) separates what was observed from what was checked automatically.
 
@@ -136,4 +144,4 @@ If this looks like your issue, follow the guide for your platform and verify tha
 
 When asking for help, share your router/extender models, helper platform, and a short description of what happened. Remove real MAC addresses, passwords, serial numbers, and other private network details from anything you post publicly.
 
-Original project code is [MIT licensed](LICENSE). External programs are downloaded separately. This project is not affiliated with Verizon.
+Original project code is [MIT licensed](LICENSE). Third-party components retain their [own licenses](THIRD-PARTY-NOTICES.md). This project is not affiliated with Verizon.

@@ -229,6 +229,11 @@ def _preflight(config: dict, allow_wifi: bool = False) -> None:
 
 
 def _dnsmasq_binary() -> str:
+    if sys.platform == "darwin" and getattr(sys, "frozen", False):
+        bundled = Path(sys.executable).resolve().with_name("dnsmasq")
+        if bundled.is_file() and os.access(bundled, os.X_OK):
+            return str(bundled)
+        raise RuntimeError("the bundled DHCP engine is missing; extract a complete macOS release again")
     for name in ("/usr/sbin/dnsmasq", "/usr/local/sbin/dnsmasq", "/opt/homebrew/sbin/dnsmasq"):
         if Path(name).is_file() and os.access(name, os.X_OK):
             return name

@@ -1,5 +1,7 @@
 # macOS setup
 
+**For the simpler download-and-open version, use the [Mac download guide](downloads.md#macos).** That download includes Python and dnsmasq; the steps below describe running the source scripts yourself.
+
 Use Python 3.10+, dnsmasq and a stable wired LAN connection. The original Mac configuration was syntax-checked with Homebrew dnsmasq 2.93; the public runner is generalized code.
 
 ## Prepare

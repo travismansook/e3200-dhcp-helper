@@ -19,3 +19,7 @@ windows/vendor/
 *.ini
 .pytest_cache/
 site-packages/
+build/
+dist/
+release/
+*.spec

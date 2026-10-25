@@ -1,5 +1,7 @@
 # Linux setup — experimental
 
+**For the simpler Ubuntu installer, use the [Ubuntu download guide](downloads.md#ubuntu).** The steps below describe running or installing the source scripts yourself.
+
 Linux runtime support is experimental. Validate the foreground helper before installing or enabling a persistent service.
 
 ## Dependencies

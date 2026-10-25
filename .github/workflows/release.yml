@@ -1,0 +1,66 @@
+name: Build downloadable programs
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/release.yml'
+      - 'VERSION'
+  workflow_dispatch:
+permissions:
+  contents: read
+concurrency:
+  group: release-programs
+  cancel-in-progress: false
+jobs:
+  build:
+    name: Build ${{ matrix.label }}
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - os: windows-latest
+            label: Windows-x64
+          - os: macos-15
+            label: macOS-AppleSilicon
+          - os: macos-15-intel
+            label: macOS-Intel
+          - os: ubuntu-22.04
+            label: Ubuntu-amd64
+    runs-on: ${{ matrix.os }}
+    steps:
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
+      - uses: actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065
+        with:
+          python-version: '3.12'
+      - name: Run offline regression tests
+        run: python -m unittest discover -s tests -v
+      - name: Install pinned build tool
+        run: python -m pip install pyinstaller==6.22.3
+      - name: Install Ubuntu build and package dependencies
+        if: runner.os == 'Linux'
+        run: sudo apt-get update && sudo apt-get install -y --no-install-recommends dnsmasq-base iproute2
+      - name: Build and startup-test the program
+        run: python packaging/build_release.py
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        with:
+          name: download-${{ matrix.label }}
+          path: release/*
+          if-no-files-found: error
+          retention-days: 7
+  publish:
+    name: Publish preview downloads
+    needs: build
+    runs-on: ubuntu-24.04
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
+      - uses: actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093
+        with:
+          pattern: download-*
+          path: release
+          merge-multiple: true
+      - name: Publish verified release assets
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+        run: python3 packaging/publish_release.py

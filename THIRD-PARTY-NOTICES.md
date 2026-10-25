@@ -1,6 +1,8 @@
 # Third-party notices
 
-This repository contains original scripts, configuration generation, documentation and synthetic tests. External DHCP executables are downloaded separately and retain their own licenses.
+This repository contains original scripts, configuration generation, documentation and synthetic tests. Ready-to-open releases include a Python runtime. Mac downloads also include a build of unmodified dnsmasq source, its full corresponding source archive, build instructions and license notices. Windows obtains Tftpd64 separately from upstream on first use; Ubuntu packages depend on the distribution's dnsmasq-base package.
+
+Release downloads include Python's license and PyInstaller's license/bootloader exception in their licenses folder. The build workflow pins PyInstaller and records its version, Python version, architecture and source commit in build-info.json. External components retain their own licenses.
 
 ## dnsmasq
 
