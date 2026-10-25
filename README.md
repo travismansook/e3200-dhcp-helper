@@ -1,7 +1,7 @@
 <p align="center"><img src="assets/banner.svg" alt="E3200 DHCP Helper — Windows, macOS and Linux" width="100%"></p>
 
 <p align="center">
-<a href="https://github.com/travismansook/e3200-dhcp-helper/actions/workflows/ci.yml"><img src="https://github.com/travismansook/e3200-dhcp-helper/actions/workflows/ci.yml/badge.svg" alt="Offline checks"></a>
+<a href="https://github.com/travismansook/e3200-dhcp-helper/actions/workflows/ci.yml"><img src="https://github.com/travismansook/e3200-dhcp-helper/actions/workflows/ci.yml/badge.svg?branch=main" alt="Offline checks"></a>
 <a href="LICENSE"><img src="https://img.shields.io/badge/license-MIT-blue" alt="MIT license"></a>
 <img src="https://img.shields.io/badge/Python-3.10%2B-3776AB" alt="Python 3.10 or newer for Unix">
 </p>

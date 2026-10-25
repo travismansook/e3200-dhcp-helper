@@ -27,6 +27,8 @@ The logs did not include a timezone offset. These were periodic gateway checks, 
 
 See CI for its actual current results. Automated checks and successful syntax parsing are separate from a live network result.
 
+The initial public [GitHub Actions run](https://github.com/travismansook/e3200-dhcp-helper/actions/runs/40164419112) passed all six jobs: Python tests on Windows, macOS and Ubuntu (including Python 3.10 and 3.14), native Windows PowerShell and modern PowerShell checks, plus the dnsmasq configuration parser. Tests use synthetic input and do not start a DHCP server.
+
 ## Validate your installation
 
 Record OS, DHCP engine and extender firmware without exposing private identifiers:
